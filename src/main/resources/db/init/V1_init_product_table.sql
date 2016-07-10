@@ -1,0 +1,1 @@
+insert into products (id, name, description, price, rating) values ("001", "apple", "red apple", 1.1, 5);
