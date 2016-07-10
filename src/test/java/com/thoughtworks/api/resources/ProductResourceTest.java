@@ -2,18 +2,22 @@ package com.thoughtworks.api.resources;
 
 import com.thoughtworks.api.records.Product;
 import com.thoughtworks.api.support.ApiSupport;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-public class ProductResourceTest extends ApiSupport{
+public class ProductResourceTest extends ApiSupport {
 
     private Product product;
 
@@ -22,10 +26,10 @@ public class ProductResourceTest extends ApiSupport{
     public void setUp() throws Exception {
         super.setUp();
         product = new Product().setId("001")
-                                       .setName("apple")
-                                       .setDescription("red apple")
-                                       .setPrice(1.1)
-                                       .setRating(5);
+                .setName("apple")
+                .setDescription("red apple")
+                .setPrice(1.1)
+                .setRating(5);
     }
 
     @Test
@@ -42,4 +46,15 @@ public class ProductResourceTest extends ApiSupport{
         assertThat(prod.get("price"), is(product.getPrice()));
         assertThat(prod.get("rating"), is(product.getRating()));
     }
+
+    @Test
+    public void should_create_product() throws Exception {
+        HashMap<String, Object> prod = new HashMap<>();
+        prod.put("name", "orange");
+        prod.put("description", "great orange");
+        prod.put("price", 1.2);
+        final Response response = target("/products").request().post(Entity.json(prod));
+        assertThat(response.getStatus(), CoreMatchers.is(201));
+    }
+
 }

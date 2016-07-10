@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.thoughtworks.api.mappers.ProductionMapper">
+<mapper namespace="com.thoughtworks.api.mappers.ProductMapper">
     <select id="findById" resultMap="records.product">
         SELECT
         <include refid="columns.product"/>
         FROM products P
         WHERE P.id = #{id}
     </select>
+
+    <insert id="save">
+    INSERT INTO products (id, name, description, price, rating)
+    VALUES (#{product.productId.id}, #{product.name}, #{product.description}, #{product.price},  #{product.rating})
+    </insert>
 </mapper>
