@@ -33,7 +33,7 @@ public class ProductResource {
     public Response create(Map<String, Object> prodInfo,
                            @Context ProductRepository productRepository,
                            @Context Routes routes) {
-        Product prod = productRepository.save(new Product().setId("002")
+        Product prod = productRepository.save(new Product().setId(productRepository.nextId())
                 .setName(prodInfo.get("name").toString())
                 .setDescription(prodInfo.get("description").toString())
                 .setPrice(Double.valueOf(prodInfo.get("price").toString()))

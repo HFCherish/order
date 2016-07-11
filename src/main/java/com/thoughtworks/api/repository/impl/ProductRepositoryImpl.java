@@ -6,10 +6,16 @@ import com.thoughtworks.api.repository.ProductRepository;
 
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.UUID;
 
 public class ProductRepositoryImpl implements ProductRepository {
     @Inject
     ProductMapper mapper;
+
+    @Override
+    public String nextId() {
+        return UUID.randomUUID().toString();
+    }
 
     @Override
     public Optional<Product> ofId(String id) {
