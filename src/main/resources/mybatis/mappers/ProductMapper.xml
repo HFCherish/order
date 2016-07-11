@@ -12,4 +12,10 @@
     INSERT INTO products (id, name, description, price, rating)
     VALUES (#{product.id}, #{product.name}, #{product.description}, #{product.price},  #{product.rating})
     </insert>
+
+    <select id="findAll" resultMap="records.product">
+        SELECT
+        <include refid="columns.product"/>
+        FROM products P
+    </select>
 </mapper>

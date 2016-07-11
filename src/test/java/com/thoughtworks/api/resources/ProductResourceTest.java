@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
@@ -28,7 +29,7 @@ public class ProductResourceTest extends ApiSupport {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        product = new Product().setId("001")
+        product = new Product().setId(productRepository.nextId())
                 .setName("apple")
                 .setDescription("red apple")
                 .setPrice(1.1)
@@ -44,11 +45,7 @@ public class ProductResourceTest extends ApiSupport {
         assertThat(response.getStatus(), is(200));
 
         Map prod = response.readEntity(Map.class);
-        assertThat(prod.get("id"), is(product.getId()));
-        assertThat(prod.get("name"), is(product.getName()));
-        assertThat(prod.get("description"), is(product.getDescription()));
-        assertThat(prod.get("price"), is(product.getPrice()));
-        assertThat(prod.get("rating"), is(product.getRating()));
+        verifySameProduct(prod, product);
     }
 
     @Test
@@ -62,4 +59,28 @@ public class ProductResourceTest extends ApiSupport {
         assertThat(response.getStatus(), is(201));
     }
 
+    @Test
+    public void should_get_all_products() {
+        //before
+        productRepository.save(product);
+
+        //when
+        final Response response = get("/products/");
+
+        //then
+        assertThat(response.getStatus(), is(200));
+        List prods = response.readEntity(List.class);
+        assertThat(prods.size(), is(1));
+        Map prod = (Map) prods.get(0);
+        verifySameProduct(prod, product);
+
+    }
+
+    private void verifySameProduct(Map prod, Product anotherProd) {
+        assertThat(prod.get("id"), is(anotherProd.getId()));
+        assertThat(prod.get("name"), is(anotherProd.getName()));
+        assertThat(prod.get("description"), is(anotherProd.getDescription()));
+        assertThat(prod.get("price"), is(anotherProd.getPrice()));
+        assertThat(prod.get("rating"), is(anotherProd.getRating()));
+    }
 }

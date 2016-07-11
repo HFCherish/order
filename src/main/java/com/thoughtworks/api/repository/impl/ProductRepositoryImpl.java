@@ -5,6 +5,8 @@ import com.thoughtworks.api.records.Product;
 import com.thoughtworks.api.repository.ProductRepository;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,5 +28,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     public Product save(Product product) {
         mapper.save(product);
         return mapper.findById(product.getId());
+    }
+
+    @Override
+    public List<Product> findAll() {
+        List<Product> products = mapper.findAll();
+        return products;
     }
 }

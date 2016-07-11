@@ -8,22 +8,18 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Map;
 
 @Path("/products")
 public class ProductResource {
-//    private Product product;
-//
-//    public ProductResource(Product product) {
-//        this.product = product;
-//    }
 
     @GET
     @Path("{productId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Product getProduct(@PathParam("productId") String productId,
-                              @Context ProductRepository prodService) {
-        return prodService.ofId(productId)
+                              @Context ProductRepository prodRepository) {
+        return prodRepository.ofId(productId)
                 .map(product -> product)
                 .orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
     }
@@ -38,11 +34,13 @@ public class ProductResource {
                 .setDescription(prodInfo.get("description").toString())
                 .setPrice(Double.valueOf(prodInfo.get("price").toString()))
                 .setRating(5));
-        System.out.println("***********prod.id:" + prod.getId());
-        System.out.println("***********routes::" + (routes!=null));
 
         return Response.created(routes.product(prod)).build();
-//        return Response.status(201).header("Location", routes.product(prod)).build();
-//        return Response.status(201).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Product> getAllProducts(@Context ProductRepository productRepository) {
+        return productRepository.findAll();
     }
 }
