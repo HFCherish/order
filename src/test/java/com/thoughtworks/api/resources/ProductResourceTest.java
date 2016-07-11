@@ -56,7 +56,6 @@ public class ProductResourceTest extends ApiSupport {
         prod.put("price", 1.2);
         final Response response = target("/products").request().post(Entity.json(prod));
         assertThat(response.getStatus(), is(201));
-        assertThat(response.getStatus(), is(201));
     }
 
     @Test

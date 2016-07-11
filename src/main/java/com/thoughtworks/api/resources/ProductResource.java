@@ -32,8 +32,7 @@ public class ProductResource {
         Product prod = productRepository.save(new Product().setId(productRepository.nextId())
                 .setName(prodInfo.get("name").toString())
                 .setDescription(prodInfo.get("description").toString())
-                .setPrice(Double.valueOf(prodInfo.get("price").toString()))
-                .setRating(5));
+                .setPrice(Double.valueOf(prodInfo.get("price").toString())));
 
         return Response.created(routes.product(prod)).build();
     }

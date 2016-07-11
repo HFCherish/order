@@ -3,13 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="records">
-    <!--<resultMap id="user" type="com.thoughtworks.api.records.User">-->
-        <!--<id property="id" column="userId"/>-->
-        <!--<result property="name" column="userName"/>-->
-        <!--<result property="email" column="userEmail"/>-->
-        <!--<result property="role" column="userRole"/>-->
-        <!--<result property="password" column="userPassword"/>-->
-    <!--</resultMap>-->
+    <resultMap id="user" type="com.thoughtworks.api.records.User">
+        <id property="id" column="userId"/>
+        <result property="name" column="userName"/>
+    </resultMap>
 
     <resultMap id="product" type="com.thoughtworks.api.records.Product">
         <id property="id" column="prodId"/>
