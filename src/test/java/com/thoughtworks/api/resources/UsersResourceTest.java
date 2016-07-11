@@ -1,33 +1,35 @@
 package com.thoughtworks.api.resources;
 
+import com.thoughtworks.api.records.User;
+import com.thoughtworks.api.repository.UserRepository;
 import com.thoughtworks.api.support.ApiSupport;
 import com.thoughtworks.api.support.ApiTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.inject.Inject;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
 
 @RunWith(ApiTestRunner.class)
 public class UsersResourceTest extends ApiSupport{
 
-//    private User user;
-//
-//    @Inject
-//    UserRepositoryImpl userRepository;
-//
-//    @Before
-//    public void setUp() {
-//        user = new User();
-//        user.setId(userRepository.nextId());
-//        user.setName("Imran");
-//    }
+    @Inject
+    UserRepository userRepository;
+
+    private User getDefaultUser() {
+        User user = new User();
+        user.setId(userRepository.nextId());
+        user.setName("Imran");
+        return user;
+    }
 
     @Test
     public void should_create_user() {
@@ -36,10 +38,15 @@ public class UsersResourceTest extends ApiSupport{
         final Response response = target("/users").request().post(Entity.json(userInfo));
         assertThat(response.getStatus(), is(201));
     }
+    @Test
+    public void should_get_user_by_id() throws Exception {
+        User user = getDefaultUser();
+        userRepository.save(user);
+        final Response response = get("/users/" + user.getId());
+        assertThat(response.getStatus(), is(200));
+        final Map userMap = response.readEntity(Map.class);
+        assertThat(userMap.get("id"), is(user.getId()));
+        assertThat(userMap.get("name"), is(user.getName()));
+    }
 
-//    @Test
-//    public void should_get_one_user_by_id() {
-//
-//
-//    }
 }

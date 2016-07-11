@@ -2,7 +2,10 @@ package com.thoughtworks.api.resources;
 
 import com.thoughtworks.api.records.User;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 public class UserResource {
 
@@ -10,6 +13,12 @@ public class UserResource {
 
     public UserResource(User user) {
         this.user = user;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public User getUser() {
+        return user;
     }
 
     @Path("orders")

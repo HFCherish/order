@@ -23,11 +23,14 @@ public class UsersResource {
         return Response.created(routes.user(user)).build();
     }
 
+    @GET
     @Path("{userId}")
-    public UserResource getUser(@PathParam("userId") String userId,
+    @Produces(MediaType.APPLICATION_JSON)
+    public User getUser(@PathParam("userId") String userId,
                                 @Context UserRepository userRepository) {
         return userRepository.ofId(userId)
-                .map(UserResource::new)
+//                .map(UserResource::new)
+                .map(user -> user)
                 .orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
     }
 }
