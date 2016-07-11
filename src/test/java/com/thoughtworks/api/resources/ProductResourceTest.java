@@ -1,25 +1,28 @@
 package com.thoughtworks.api.resources;
 
 import com.thoughtworks.api.records.Product;
+import com.thoughtworks.api.repository.ProductRepository;
 import com.thoughtworks.api.support.ApiSupport;
-import org.hamcrest.CoreMatchers;
+import com.thoughtworks.api.support.ApiTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.inject.Inject;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
+@RunWith(ApiTestRunner.class)
 public class ProductResourceTest extends ApiSupport {
 
     private Product product;
+    @Inject
+    ProductRepository productRepository;
 
     @Override
     @Before
@@ -34,15 +37,16 @@ public class ProductResourceTest extends ApiSupport {
 
     @Test
     public void should_get_one_product_by_id() throws Exception {
+        productRepository.save(product);
 
         final Response response = get("/products/" + product.getId());
 
         assertThat(response.getStatus(), is(200));
 
         Map prod = response.readEntity(Map.class);
-        assertThat(prod.get("id"), is(equals(product.getId())));
-        assertThat(prod.get("name"), is(equals(product.getName())));
-        assertThat(prod.get("description"), is(equals(product.getDescription())));
+        assertThat(prod.get("id"), is(product.getId()));
+        assertThat(prod.get("name"), is(product.getName()));
+        assertThat(prod.get("description"), is(product.getDescription()));
         assertThat(prod.get("price"), is(product.getPrice()));
         assertThat(prod.get("rating"), is(product.getRating()));
     }
@@ -54,7 +58,8 @@ public class ProductResourceTest extends ApiSupport {
         prod.put("description", "great orange");
         prod.put("price", 1.2);
         final Response response = target("/products").request().post(Entity.json(prod));
-        assertThat(response.getStatus(), CoreMatchers.is(201));
+        assertThat(response.getStatus(), is(201));
+        assertThat(response.getStatus(), is(201));
     }
 
 }

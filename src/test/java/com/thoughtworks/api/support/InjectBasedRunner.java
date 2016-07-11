@@ -1,0 +1,190 @@
+package com.thoughtworks.api.support;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.CreationException;
+import com.google.inject.Injector;
+import com.google.inject.Provider;
+import com.google.inject.name.Names;
+import com.google.inject.spi.Message;
+import com.google.inject.util.Modules;
+import com.thoughtworks.api.records.Models;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jersey.internal.inject.Injections;
+import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.spi.Container;
+import org.glassfish.jersey.server.spi.ContainerLifecycleListener;
+import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.runners.model.FrameworkMethod;
+import org.junit.runners.model.InitializationError;
+import org.jvnet.hk2.guice.bridge.api.GuiceIntoHK2Bridge;
+
+import javax.inject.Inject;
+import java.util.*;
+
+import static com.google.inject.Guice.createInjector;
+import static java.util.Arrays.asList;
+import static org.jvnet.hk2.guice.bridge.api.GuiceBridge.getGuiceBridge;
+
+public abstract class InjectBasedRunner extends BlockJUnit4ClassRunner {
+    private static final String SERVER_URI = "http://localhost:8888";
+
+    protected ServiceLocator locator = Injections.createLocator();
+
+
+    public InjectBasedRunner(Class<?> klass) throws InitializationError {
+        super(klass);
+
+        List<AbstractModule> modules = getAbstractModules();
+        try {
+            Injector injector = createInjector(Modules.override(modules).with(new TestModule()));
+            bridge(locator, injector);
+        } catch (CreationException ce) {
+            Collection<Message> errorMessages = ce.getErrorMessages();
+            errorMessages.stream().forEach(m -> System.err.println(m.getMessage()));
+            System.exit(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        locator.inject(this);
+    }
+
+    private static void bridge(ServiceLocator serviceLocator, Injector injector) {
+        getGuiceBridge().initializeGuiceBridge(serviceLocator);
+        serviceLocator.getService(GuiceIntoHK2Bridge.class).bridgeGuiceInjector(injector);
+    }
+
+    private List<AbstractModule> getAbstractModules() {
+        Properties properties = new Properties();
+        String dbname = System.getenv().getOrDefault("DB_NAME", "data_store");
+        String host = System.getenv().getOrDefault("DB_HOST", "localhost");
+        String port = System.getenv().getOrDefault("DB_PORT", "3306");
+        String username = System.getenv().getOrDefault("DB_USERNAME", "mysql");
+        String password = System.getenv().getOrDefault("DB_PASSWORD", "mysql");
+        String connectURL = String.format(
+                "jdbc:mysql://%s:%s/%s?user=%s&password=%s&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull",
+                host,
+                port,
+                dbname,
+                username,
+                password
+        );
+        properties.setProperty("db.url", connectURL);
+        List<AbstractModule> modules = new ArrayList<>(asList(new AbstractModule[]{
+                new AbstractModule() {
+                    @Override
+                    protected void configure() {
+                    }
+                },
+                new Models("development", properties),
+                new AbstractModule() {
+                    @Override
+                    protected void configure() {
+                        bindConstant().annotatedWith(Names.named("server_uri")).to(SERVER_URI);
+                        bind(ServiceLocator.class).toInstance(locator);
+
+                        bind(javax.ws.rs.core.Application.class).toProvider(ApplicationProvider.class);
+                        bind(ApiSupport.ClientConfigurator.class).toInstance(config -> {
+                            config.register(JacksonFeature.class);
+                        });
+                        bind(ApiSupport.SetUp.class).toInstance(() -> {
+
+                        });
+//                        final SessionStorage sessionStorage = new SessionStorage() {
+//                            Map<String, Object> map = new HashMap<String, Object>();
+//
+//                            @Override
+//                            public boolean set(String key, int expireSeconds, Object obj) {
+//                                map.put(key, obj);
+//                                return true;
+//                            }
+//
+//                            @Override
+//                            public Object get(String key) {
+//                                return map.get(key);
+//                            }
+//
+//                            @Override
+//                            public boolean delete(String key) {
+//                                map.remove(key);
+//                                return true;
+//                            }
+//
+//                            @Override
+//                            public boolean replace(String key, int expireSeconds, Object obj) {
+//                                map.put(key, obj);
+//                                return true;
+//                            }
+//                        };
+//                        bind(SessionStorage.class).toInstance(sessionStorage);
+//                        bind(SessionIdGenerator.class).to(RandomSessionIdGenerator.class);
+//                        bind(EventHandler.class).to(DefaultEventHandler.class);
+//                        bind(UserService.class).to(MainServer.SessionBasedUserService.class);
+//                        bind(AuthorizationService.class).to(com.thoughtworks.ketsu.infrastructure.AuthorizationService.class);
+//                        bind(EncryptionService.class).to(DefaultEncryptionService.class);
+//                        bind(AuthenticationService.class).to(com.thoughtworks.ketsu.infrastructure.OktaAuthenticationService.class);
+                    }
+                }}));
+        modules.addAll(getModules());
+        return modules;
+    }
+
+    protected List<AbstractModule> getModules() {
+        return asList();
+    }
+
+    @Override
+    protected Object createTest() throws Exception {
+        Object testClass = super.createTest();
+        locator.inject(testClass);
+        return testClass;
+    }
+
+    @Override
+    protected String testName(FrameworkMethod method) {
+        Description description = method.getAnnotation(Description.class);
+        return description != null ? description.value() : super.testName(method);
+    }
+
+    private static class ApplicationProvider implements Provider<javax.ws.rs.core.Application> {
+        @Inject
+        Injector injector;
+
+        @Override
+        public javax.ws.rs.core.Application get() {
+            ApiForTest api = new ApiForTest();
+
+            api.register(new ContainerLifecycleListener() {
+                @Override
+                public void onStartup(Container container) {
+                    bridge(container.getApplicationHandler().getServiceLocator(), injector);
+                }
+
+                @Override
+                public void onReload(Container container) {
+
+                }
+
+                @Override
+                public void onShutdown(Container container) {
+
+                }
+            });
+
+            return ResourceConfig.forApplication(api);
+        }
+
+        private void bridge(ServiceLocator serviceLocator, Injector injector) {
+            getGuiceBridge().initializeGuiceBridge(serviceLocator);
+            serviceLocator.getService(GuiceIntoHK2Bridge.class).bridgeGuiceInjector(injector);
+        }
+    }
+
+    private static class TestModule extends AbstractModule {
+        @Override
+        protected void configure() {
+        }
+    }
+
+}

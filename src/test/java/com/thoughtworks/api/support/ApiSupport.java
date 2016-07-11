@@ -1,10 +1,11 @@
 package com.thoughtworks.api.support;
 
+import com.thoughtworks.api.session.Session;
 import com.thoughtworks.api.utils.Json;
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.servlet.ServletRegistration;
 import org.glassfish.grizzly.servlet.WebappContext;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -15,13 +16,13 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.junit.After;
 import org.junit.Before;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
@@ -49,11 +50,22 @@ public class ApiSupport {
     private String serverUri;
     protected String token = "";
 
+    @Mock
+    public Session session;
+
     @Before
     public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+
         test = new JerseyTest() {
             @Override
             protected Application configure() {
+                application = ((ResourceConfig)application).register(new AbstractBinder() {
+                    @Override
+                    protected void configure() {
+                        bind(session).to(Session.class);
+                    }
+                });
                 return application;
             }
 
@@ -106,7 +118,6 @@ public class ApiSupport {
     protected Response get(String uri) {
         return session(test.target(uri).request()).get();
     }
-
     protected Response delete(String uri) {
         return session(test.target(uri).request()).delete();
     }
@@ -121,18 +132,6 @@ public class ApiSupport {
 
     private Invocation.Builder session(Invocation.Builder request) {
         return request.header("Authorization", token);
-    }
-
-    protected static Map<String, Object> transform(String jsonString) {
-        ScriptEngine scriptEngine = new NashornScriptEngineFactory().getScriptEngine();
-        String stringifyScript = "function stringify(jsonString) {var result = eval(jsonString); return JSON.stringify(result);} stringify(" + jsonString + ")";
-
-        try {
-            return (Map<String, Object>) scriptEngine.eval("JSON.parse('" + String.valueOf(scriptEngine.eval(stringifyScript)) + "');");
-        } catch (ScriptException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
     }
 
     protected static Map<String, Object> copy(Map<String, Object> src) {

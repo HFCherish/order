@@ -10,6 +10,6 @@
 
     <insert id="save">
     INSERT INTO products (id, name, description, price, rating)
-    VALUES (#{product.productId.id}, #{product.name}, #{product.description}, #{product.price},  #{product.rating})
+    VALUES (#{product.id}, #{product.name}, #{product.description}, #{product.price},  #{product.rating})
     </insert>
 </mapper>
