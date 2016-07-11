@@ -35,7 +35,6 @@ public class UsersResourceTest extends ApiSupport{
         userInfo.put("name", "Imran");
         final Response response = target("/users").request().post(Entity.json(userInfo));
         assertThat(response.getStatus(), is(201));
-
     }
 
 //    @Test
