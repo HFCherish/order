@@ -16,4 +16,15 @@
         P.rating as prodRate
     </sql>
 
+    <sql id="order">
+        O.id as orderId,
+        O.name as userName,
+        O.address as userAddr,
+        O.phone as userPhone,
+        O.created_at as createDate,
+        OI.product_id as prodId,
+        OI.quantity as prodQuantity,
+        OI.amount as prodAmount
+    </sql>
+
 </mapper>

@@ -19,13 +19,15 @@
 	3. name
 	4. address
 	5. phone
-	6. order_items
+	7. createdAt
 7. order_items:
+	8. order_id
 	8. product_id
 	9. quantity
+	10. amount
 10. user:
 	11. name
-	12. order_items
+
 	
 
 

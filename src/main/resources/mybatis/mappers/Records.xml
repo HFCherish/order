@@ -16,4 +16,17 @@
         <result property="rating" column="prodRate"/>
     </resultMap>
 
+    <resultMap id="order" type="com.thoughtworks.api.records.Order">
+        <id property="id" column="orderId"/>
+        <result property="name" column="userName"/>
+        <result property="address" column="userAddr"/>
+        <result property="phone" column="userPhone"/>
+        <result property="createdAt" column="createDate" />
+        <collection property="order_items" ofType="com.thoughtworks.api.records.OrderItem">
+            <result property="product_id" column="prodId" />
+            <result property="quantity" column="prodQuantity" />
+            <result property="amount" column="prodAmount" />
+        </collection>
+    </resultMap>
+
 </mapper>
