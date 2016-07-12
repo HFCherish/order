@@ -64,4 +64,12 @@ public class UserOrdersResource {
                 .orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public  List<Order> getAllOrders(@Context OrderRepository orderRepository) {
+        return orderRepository.findAllOfUser(user.getId())
+                .map(orders -> orders)
+                .orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
+    }
+
 }

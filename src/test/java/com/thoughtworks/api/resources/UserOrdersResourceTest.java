@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
 import java.util.*;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 @RunWith(ApiTestRunner.class)
 public class UserOrdersResourceTest extends ApiSupport {
@@ -75,9 +75,22 @@ public class UserOrdersResourceTest extends ApiSupport {
     @Test
     public void should_get_one_order() {
         Order order = getDefaultOrder();
-        orderRepository.save(order,user.getId());
+        orderRepository.save(order, user.getId());
 
-        Response response = target("/users/" + user.getId() + "/orders/" +order.getId()).request().get();
+        Response response = target("/users/" + user.getId() + "/orders/" + order.getId()).request().get();
+        assertThat(response.getStatus(), is(200));
+        Map orderInfo = response.readEntity(Map.class);
+        assertThat(orderInfo.get("id").toString(), is(order.getId()));
+        List<Map<String, Object>> orderItems = (List<Map<String, Object>>) (orderInfo.get("orderItems"));
+        assertThat(orderItems.get(0).get("productId").toString(), is(product.getId()));
+    }
+
+    @Test
+    public void should_get_all_orders_of_some_user() {
+        Order order = getDefaultOrder();
+        orderRepository.save(order, user.getId());
+
+        Response response = target("/users/" + user.getId() + "/orders").request().get();
         assertThat(response.getStatus(), is(200));
 
     }

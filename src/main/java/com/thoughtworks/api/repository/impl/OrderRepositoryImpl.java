@@ -7,6 +7,7 @@ import com.thoughtworks.api.records.OrderItem;
 import com.thoughtworks.api.repository.OrderRepository;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 
 public class OrderRepositoryImpl implements OrderRepository {
@@ -26,7 +27,11 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Optional<Order> ofId(String orderId) {
-        Order order = orderMapper.findById(orderId);
-        return Optional.ofNullable(order);
+        return Optional.ofNullable(orderMapper.findById(orderId));
+    }
+
+    @Override
+    public Optional<List<Order>> findAllOfUser(String userId) {
+        return Optional.ofNullable(orderMapper.findAllOfUser(userId));
     }
 }
