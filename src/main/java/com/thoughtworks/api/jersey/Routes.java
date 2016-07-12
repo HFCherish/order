@@ -1,5 +1,6 @@
 package com.thoughtworks.api.jersey;
 
+import com.thoughtworks.api.records.Order;
 import com.thoughtworks.api.records.Product;
 import com.thoughtworks.api.records.User;
 
@@ -25,5 +26,9 @@ public class Routes {
 
     public URI order(User user) {
         return URI.create(baseUri + "users/" + user.getId() + "/orders");
+    }
+
+    public URI payment(Order order) {
+        return URI.create(baseUri + "users/" + order.getUserId() + "/orders/" + order.getId() + "/payment");
     }
 }

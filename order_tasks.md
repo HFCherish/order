@@ -20,6 +20,7 @@
 	4. address
 	5. phone
 	7. created_at
+	9. pay_state
 7. order_items:
 	8. order_id
 	8. product_id
@@ -27,6 +28,10 @@
 	10. amount
 10. user:
 	11. name
+12. payments:
+	8. pay_type
+	10. pay_at
+	11. pay_amount
 
 	
 

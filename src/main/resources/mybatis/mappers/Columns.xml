@@ -18,6 +18,7 @@
 
     <sql id="order">
         O.id as orderId,
+        O.user_id as userId,
         O.name as userName,
         O.address as userAddr,
         O.phone as userPhone,
@@ -25,6 +26,13 @@
         OI.product_id as prodId,
         OI.quantity as prodQuantity,
         OI.amount as prodAmount
+    </sql>
+
+    <sql id="payment">
+        P.order_id as orderId,
+        P.pay_type as payType,
+        P.pay_amount as payAmount,
+        P.pay_at as payAt
     </sql>
 
 </mapper>

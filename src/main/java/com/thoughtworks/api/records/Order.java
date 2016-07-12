@@ -1,16 +1,19 @@
 package com.thoughtworks.api.records;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+
 import java.util.List;
 import java.util.UUID;
 
 public class Order {
     protected String id;
+    protected String userId;
     protected String name;
     protected String address;
     protected String phone;
-    protected Date createdAt;
+    protected DateTime createdAt;
     protected double totalPrice;
+    protected boolean payState;
     protected List<OrderItem> orderItems;
 
     public Order() {
@@ -23,6 +26,18 @@ public class Order {
             totalPrice += orderItem.getAmount();
         }
         return totalPrice;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public boolean isPayState() {
+        return payState;
     }
 
     public String getId() {
@@ -41,7 +56,7 @@ public class Order {
         return phone;
     }
 
-    public Date getCreatedAt() {
+    public DateTime getCreatedAt() {
         return createdAt;
     }
 

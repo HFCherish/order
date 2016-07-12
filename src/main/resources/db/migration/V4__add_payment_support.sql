@@ -1,0 +1,9 @@
+CREATE TABLE payments (
+  order_id VARCHAR (255) UNIQUE,
+  pay_type INTEGER NOT NULL DEFAULT 0,
+  pay_amount DOUBLE NOT NULL,
+  pay_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (order_id) REFERENCES orders(id)
+);
+
+ALTER TABLE orders ADD COLUMN pay_state INTEGER DEFAULT 0;

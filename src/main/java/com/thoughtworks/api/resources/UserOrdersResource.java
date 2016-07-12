@@ -47,13 +47,11 @@ public class UserOrdersResource {
         return Response.created(routes.order(user)).build();
     }
 
-    @GET
     @Path("{orderId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public  Order getOrder(@PathParam("orderId") String orderId,
+    public  OrderPaymentResource getOrder(@PathParam("orderId") String orderId,
                            @Context OrderRepository orderRepository) {
         return orderRepository.ofId(orderId)
-                .map(order -> order)
+                .map(OrderPaymentResource::new)
                 .orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
     }
 

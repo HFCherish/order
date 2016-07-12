@@ -18,6 +18,7 @@
 
     <resultMap id="order" type="com.thoughtworks.api.records.Order">
         <id property="id" column="orderId"/>
+        <result property="userId" column="userId"/>
         <result property="name" column="userName"/>
         <result property="address" column="userAddr"/>
         <result property="phone" column="userPhone"/>
@@ -27,6 +28,13 @@
             <result property="quantity" column="prodQuantity" />
             <result property="amount" column="prodAmount" />
         </collection>
+    </resultMap>
+
+    <resultMap id="payment" type="com.thoughtworks.api.records.Payment">
+        <result property="orderId" column="orderId"/>
+        <result property="type" column="payType"/>
+        <result property="amount" column="payAmount"/>
+        <result property="payAt" column="payAt"/>
     </resultMap>
 
 </mapper>
