@@ -6,6 +6,7 @@ import com.thoughtworks.api.records.Product;
 import com.thoughtworks.api.records.User;
 import com.thoughtworks.api.support.ApiTestRunner;
 import com.thoughtworks.api.support.TestHelper;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -14,6 +15,8 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.thoughtworks.api.support.TestHelper.*;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -47,5 +50,6 @@ public class PaymentRepositoryTest {
         assertThat(fetchedPayment.getOrderId(), is(payment.getOrderId()));
         assertThat(fetchedPayment.getAmount(), is(payment.getAmount()));
         assertThat(fetchedPayment.getType(), is(payment.getType()));
+        assertThat(fetchedPayment.getPayAt(), is(notNullValue(DateTime.class)));
     }
 }

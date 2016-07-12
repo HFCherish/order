@@ -4,6 +4,7 @@ import com.thoughtworks.api.records.User;
 import com.thoughtworks.api.repository.UserRepository;
 import com.thoughtworks.api.support.ApiSupport;
 import com.thoughtworks.api.support.ApiTestRunner;
+import com.thoughtworks.api.support.TestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,12 +23,6 @@ public class UsersResourceTest extends ApiSupport{
     @Inject
     UserRepository userRepository;
 
-    private User getDefaultUser() {
-        User user = new User();
-        user.setName("Imran");
-        return user;
-    }
-
     @Test
     public void should_create_user() {
         Map<String, Object> userInfo = new HashMap<>();
@@ -37,7 +32,7 @@ public class UsersResourceTest extends ApiSupport{
     }
     @Test
     public void should_get_user_by_id() throws Exception {
-        User user = getDefaultUser();
+        User user = TestHelper.userForTest();
         userRepository.save(user);
         final Response response = get("/users/" + user.getId());
         assertThat(response.getStatus(), is(200));

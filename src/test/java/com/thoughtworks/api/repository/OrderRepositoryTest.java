@@ -6,6 +6,7 @@ import com.thoughtworks.api.records.Product;
 import com.thoughtworks.api.records.User;
 import com.thoughtworks.api.support.ApiTestRunner;
 import com.thoughtworks.api.support.TestHelper;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.assertThat;
@@ -54,6 +56,7 @@ public class OrderRepositoryTest {
         assertThat(fetchedOrder.getId(), is(order.getId()));
         assertThat(fetchedOrder.getTotalPrice(), is(order.getTotalPrice()));
         assertThat(fetchedOrder.getOrderItems().size(), is(1));
+        assertThat(fetchedOrder.getCreatedAt(), is(notNullValue(DateTime.class)));
         final OrderItem orderItem = fetchedOrder.getOrderItems().get(0);
         assertThat(orderItem.getProductId(), is(product.getId()));
         assertThat(orderItem.getAmount(), is(closeTo(TestHelper.ORDER_PRODUCT_AMOUNT, 0.1)));

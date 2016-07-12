@@ -4,6 +4,7 @@ import com.thoughtworks.api.records.Product;
 import com.thoughtworks.api.repository.ProductRepository;
 import com.thoughtworks.api.support.ApiSupport;
 import com.thoughtworks.api.support.ApiTestRunner;
+import com.thoughtworks.api.support.TestHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,11 +30,7 @@ public class ProductResourceTest extends ApiSupport {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        product = new Product().setId(productRepository.nextId())
-                .setName("apple")
-                .setDescription("red apple")
-                .setPrice(1.1)
-                .setRating(5);
+        product = TestHelper.productForTest(productRepository);
     }
 
     @Test
