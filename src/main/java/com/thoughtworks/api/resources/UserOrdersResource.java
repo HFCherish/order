@@ -7,10 +7,8 @@ import com.thoughtworks.api.records.User;
 import com.thoughtworks.api.repository.OrderRepository;
 import com.thoughtworks.api.repository.ProductRepository;
 
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -50,6 +48,9 @@ public class UserOrdersResource {
         order.setAddress(orderInfo.get("address").toString());
         order.setPhone(orderInfo.get("phone").toString());
         order.setOrderItems(orderItems);
+
+        orderRepository.save(order, user.getId());
+
         return Response.noContent().build();
     }
 }
