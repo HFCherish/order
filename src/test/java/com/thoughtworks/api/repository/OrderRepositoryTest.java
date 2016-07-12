@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.*;
 
 @RunWith(ApiTestRunner.class)
@@ -48,6 +49,6 @@ public class OrderRepositoryTest extends ApiSupport{
         assertThat(fetchedOrder.getOrderItems().size(), is(1));
         final OrderItem orderItem = fetchedOrder.getOrderItems().get(0);
         assertThat(orderItem.getProductId(), is(product.getId()));
-        assertThat(orderItem.getAmount(), is(2.2));
+        assertThat(orderItem.getAmount(), is(closeTo(TestHelper.ORDER_PRODUCT_AMOUNT, 0.1)));
     }
 }

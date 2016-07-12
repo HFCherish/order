@@ -12,6 +12,10 @@ import java.util.Arrays;
 
 public class TestHelper {
 
+    public static final double PRODUCT_PRICE = 1.1;
+    public static final int ORDER_PRODUCT_QUANTITY = 2;
+    public static final double ORDER_PRODUCT_AMOUNT = PRODUCT_PRICE * ORDER_PRODUCT_QUANTITY;
+
     public static Order prepareOrder(Product product, User user, OrderRepository orderRepository) {
         Order order = orderForTest(product);
         orderRepository.save(order, user.getId());
@@ -25,7 +29,7 @@ public class TestHelper {
         order.setAddress("beijing");
         OrderItem orderItem = new OrderItem();
         orderItem.setProductId(product.getId());
-        orderItem.setQuantity(2);
+        orderItem.setQuantity(ORDER_PRODUCT_QUANTITY);
         order.setOrderItems(Arrays.asList(orderItem));
         return order;
     }
@@ -40,7 +44,7 @@ public class TestHelper {
         return new Product().setId(productRepository.nextId())
                     .setName("apple")
                     .setDescription("red apple")
-                    .setPrice(1.1)
+                    .setPrice(PRODUCT_PRICE)
                     .setRating(5);
     }
 

@@ -75,8 +75,8 @@ public class UserOrdersResourceTest extends ApiSupport {
         assertThat((double)orderInfo.get("totalPrice"), is(closeTo(2.2, 0.1)));
         List<Map<String, Object>> orderItems = (List<Map<String, Object>>) (orderInfo.get("orderItems"));
         assertThat(orderItems.get(0).get("productId").toString(), is(product.getId()));
-        assertThat((int)orderItems.get(0).get("quantity"), is(2));
-        assertThat((double)orderItems.get(0).get("amount"), is(closeTo(2.2, 0.1)));
+        assertThat((int)orderItems.get(0).get("quantity"), is(TestHelper.ORDER_PRODUCT_QUANTITY));
+        assertThat((double)orderItems.get(0).get("amount"), is(closeTo(TestHelper.ORDER_PRODUCT_AMOUNT, 0.1)));
     }
 
     @Test
