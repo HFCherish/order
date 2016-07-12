@@ -1,10 +1,8 @@
 package com.thoughtworks.api.support;
 
-import com.thoughtworks.api.records.Order;
-import com.thoughtworks.api.records.OrderItem;
-import com.thoughtworks.api.records.Product;
-import com.thoughtworks.api.records.User;
+import com.thoughtworks.api.records.*;
 import com.thoughtworks.api.repository.OrderRepository;
+import com.thoughtworks.api.repository.PaymentRepository;
 import com.thoughtworks.api.repository.ProductRepository;
 import com.thoughtworks.api.repository.UserRepository;
 
@@ -15,6 +13,8 @@ public class TestHelper {
     public static final double PRODUCT_PRICE = 1.1;
     public static final int ORDER_PRODUCT_QUANTITY = 2;
     public static final double ORDER_PRODUCT_AMOUNT = PRODUCT_PRICE * ORDER_PRODUCT_QUANTITY;
+    public static final double ORDER_PAYMENT_AMOUNT = 3.0;
+    public static final int ORDER_PAY_BY_CASH = 0;
 
     public static Order prepareOrder(Product product, User user, OrderRepository orderRepository) {
         Order order = orderForTest(product);
@@ -58,5 +58,18 @@ public class TestHelper {
         User user = new User();
         user.setName("Petrina");
         return user;
+    }
+
+    public static Payment prepareOrderPayment(PaymentRepository paymentRepository, Order order) {
+        Payment payment = paymentForTest(order);
+        paymentRepository.save(payment);
+        return payment;
+    }
+
+    public static Payment paymentForTest(Order order) {
+        Payment payment = new Payment(order.getId());
+        payment.setAmount(ORDER_PAYMENT_AMOUNT);
+        payment.setType(ORDER_PAY_BY_CASH);
+        return payment;
     }
 }
