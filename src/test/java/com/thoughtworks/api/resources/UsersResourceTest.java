@@ -10,11 +10,9 @@ import org.junit.runner.RunWith;
 import javax.inject.Inject;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -26,7 +24,6 @@ public class UsersResourceTest extends ApiSupport{
 
     private User getDefaultUser() {
         User user = new User();
-        user.setId(userRepository.nextId());
         user.setName("Imran");
         return user;
     }

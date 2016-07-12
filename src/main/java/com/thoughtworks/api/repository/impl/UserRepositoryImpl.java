@@ -13,11 +13,6 @@ public class UserRepositoryImpl implements UserRepository {
     UserMapper mapper;
 
     @Override
-    public String nextId() {
-        return UUID.randomUUID().toString();
-    }
-
-    @Override
     public User save(User user) {
         mapper.save(user);
         return mapper.findById(user.getId());

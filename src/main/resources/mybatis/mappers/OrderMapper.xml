@@ -10,10 +10,10 @@
         WHERE U.id = #{user_id} AND O.id = #{order_id}
     </select>
 
-    <!--<insert id="save">-->
-    <!--INSERT INTO products (id, name, description, price, rating)-->
-    <!--VALUES (#{product.id}, #{product.name}, #{product.description}, #{product.price},  #{product.rating})-->
-    <!--</insert>-->
+    <insert id="save">
+    INSERT INTO orders (id, user_id, name, address, phone, created_at)
+    VALUES (#{order.id}, #{userId}, #{order.name}, #{order.address}, #{order.phone},  #{order.createdAt})
+    </insert>
 
     <!--<select id="findAll" resultMap="records.product">-->
         <!--SELECT-->

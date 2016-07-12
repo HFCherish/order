@@ -9,7 +9,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 public class UserOrdersResource {
+    private User user;
+
     public UserOrdersResource(User user) {
+        this.user = user;
     }
 
     @POST

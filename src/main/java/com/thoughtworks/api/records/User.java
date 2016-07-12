@@ -1,16 +1,17 @@
 package com.thoughtworks.api.records;
 
+import java.util.UUID;
+
 public class User {
     protected String id;
     protected String name;
 
-    public String getId() {
-        return id;
+    public User() {
+        this.id = UUID.randomUUID().toString();
     }
 
-    public User setId(String id) {
-        this.id = id;
-        return this;
+    public String getId() {
+        return id;
     }
 
     public String getName() {

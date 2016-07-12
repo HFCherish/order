@@ -19,7 +19,7 @@
 	3. name
 	4. address
 	5. phone
-	7. createdAt
+	7. created_at
 7. order_items:
 	8. order_id
 	8. product_id

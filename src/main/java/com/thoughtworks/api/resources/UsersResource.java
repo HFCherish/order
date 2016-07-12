@@ -18,8 +18,7 @@ public class UsersResource {
     public Response createUser(Map<String, Object> userInfo,
                                @Context UserRepository userRepository,
                                @Context Routes routes) {
-        User user = userRepository.save(new User().setId(userRepository.nextId())
-                .setName(userInfo.get("name").toString()));
+        User user = userRepository.save(new User().setName(userInfo.get("name").toString()));
         return Response.created(routes.user(user)).build();
     }
 
