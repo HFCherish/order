@@ -8,9 +8,7 @@ import com.thoughtworks.api.records.User;
 import com.thoughtworks.api.repository.OrderRepository;
 import com.thoughtworks.api.repository.ProductRepository;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -55,4 +53,15 @@ public class UserOrdersResource {
 
         return Response.created(routes.order(user)).build();
     }
+
+    @GET
+    @Path("{orderId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public  Order getOrder(@PathParam("orderId") String orderId,
+                           @Context OrderRepository orderRepository) {
+        return orderRepository.ofId(orderId)
+                .map(order -> order)
+                .orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
+    }
+
 }

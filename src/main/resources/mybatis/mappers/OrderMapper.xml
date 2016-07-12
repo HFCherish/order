@@ -5,9 +5,8 @@
         SELECT
         <include refid="columns.order"/>
         FROM orders O
-        LEFT JOIN users U ON U.id = O.user_id
         LEFT JOIN orderItems OI on O.id = OI.order_id
-        WHERE U.id = #{user_id} AND O.id = #{order_id}
+        WHERE O.id = #{orderId}
     </select>
 
     <insert id="save">
