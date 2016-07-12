@@ -10,10 +10,19 @@ public class Order {
     protected String address;
     protected String phone;
     protected Date createdAt;
+    protected double totalPrice;
     protected List<OrderItem> orderItems;
 
     public Order() {
         this.id = UUID.randomUUID().toString();
+    }
+
+    public double getTotalPrice() {
+        totalPrice = 0;
+        for( OrderItem orderItem: orderItems) {
+            totalPrice += orderItem.getAmount();
+        }
+        return totalPrice;
     }
 
     public String getId() {

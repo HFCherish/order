@@ -32,14 +32,8 @@ public class UserOrdersResource {
         List<OrderItem> orderItems = new ArrayList<>();
         for (Map<String, Object> orderItemInfo : (List<Map<String, Object>>) orderInfo.get("order_item")) {
             OrderItem orderItem = new OrderItem();
-            String product_id = orderItemInfo.get("product_id").toString();
-            orderItem.setProductId(product_id);
-            int quantity = (int) orderItemInfo.get("quantity");
-            orderItem.setQuantity(quantity);
-            Product product = productRepository.ofId(product_id)
-                    .map(prod -> prod)
-                    .orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
-            orderItem.setAmount(product.getPrice());
+            orderItem.setProductId(orderItemInfo.get("product_id").toString());
+            orderItem.setQuantity((int) orderItemInfo.get("quantity"));
             orderItems.add(orderItem);
         }
 
@@ -50,7 +44,6 @@ public class UserOrdersResource {
         order.setOrderItems(orderItems);
 
         orderRepository.save(order, user.getId());
-
         return Response.created(routes.order(user)).build();
     }
 
