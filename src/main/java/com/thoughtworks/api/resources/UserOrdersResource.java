@@ -1,5 +1,6 @@
 package com.thoughtworks.api.resources;
 
+import com.thoughtworks.api.jersey.Routes;
 import com.thoughtworks.api.records.Order;
 import com.thoughtworks.api.records.OrderItem;
 import com.thoughtworks.api.records.Product;
@@ -28,7 +29,8 @@ public class UserOrdersResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response buildOrder(Map<String, Object> orderInfo,
                                @Context OrderRepository orderRepository,
-                               @Context ProductRepository productRepository) {
+                               @Context ProductRepository productRepository,
+                               @Context Routes routes) {
         List<OrderItem> orderItems = new ArrayList<>();
         for (Map<String, Object> orderItemInfo : (List<Map<String, Object>>) orderInfo.get("order_item")) {
             OrderItem orderItem = new OrderItem();
@@ -51,6 +53,6 @@ public class UserOrdersResource {
 
         orderRepository.save(order, user.getId());
 
-        return Response.noContent().build();
+        return Response.created(routes.order(user)).build();
     }
 }

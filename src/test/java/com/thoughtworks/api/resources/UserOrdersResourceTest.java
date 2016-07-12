@@ -53,6 +53,6 @@ public class UserOrdersResourceTest extends ApiSupport {
         orderInfo.put("order_item", orderItems);
 
         Response response = target("/users/" + user.getId() + "/orders").request().post(Entity.json(orderInfo));
-        assertThat(response.getStatus(), is(204));
+        assertThat(response.getStatus(), is(201));
     }
 }

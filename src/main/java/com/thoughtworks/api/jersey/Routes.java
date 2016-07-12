@@ -22,4 +22,8 @@ public class Routes {
     public URI user(User user) {
         return URI.create(baseUri + "users/" + user.getId());
     }
+
+    public URI order(User user) {
+        return URI.create(baseUri + "users/" + user.getId() + "/orders");
+    }
 }
