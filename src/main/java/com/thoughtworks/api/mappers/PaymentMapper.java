@@ -5,4 +5,6 @@ import org.apache.ibatis.annotations.Param;
 
 public interface PaymentMapper {
     void save(@Param("payment") Payment payment);
+
+    Payment findByOrderId(@Param("orderId") String orderId);
 }

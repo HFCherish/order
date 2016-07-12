@@ -8,6 +8,9 @@ public class Payment {
     double amount;
     DateTime payAt;
 
+    public Payment() {
+    }
+
     public Payment(String orderId) {
         this.orderId = orderId;
     }

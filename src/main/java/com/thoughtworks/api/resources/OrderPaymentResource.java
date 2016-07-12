@@ -39,4 +39,13 @@ public class OrderPaymentResource {
         return Response.created(routes.payment(order)).build();
     }
 
+    @GET
+    @Path("payment")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Payment getPay(@Context PaymentRepository paymentRepository) {
+        return paymentRepository.findByOrderId(order.getId())
+                .map(payment -> payment)
+                .orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
+    }
+
 }

@@ -1,10 +1,8 @@
 package com.thoughtworks.api.resources;
 
-import com.thoughtworks.api.records.Order;
-import com.thoughtworks.api.records.OrderItem;
-import com.thoughtworks.api.records.Product;
-import com.thoughtworks.api.records.User;
+import com.thoughtworks.api.records.*;
 import com.thoughtworks.api.repository.OrderRepository;
+import com.thoughtworks.api.repository.PaymentRepository;
 import com.thoughtworks.api.repository.ProductRepository;
 import com.thoughtworks.api.repository.UserRepository;
 import com.thoughtworks.api.support.ApiSupport;
@@ -33,6 +31,9 @@ public class UserOrderPaymentResourceTest extends ApiSupport {
     @Inject
     OrderRepository orderRepository;
 
+    @Inject
+    PaymentRepository paymentRepository;
+
     private User user;
     private Product product;
     private Order order;
@@ -43,6 +44,7 @@ public class UserOrderPaymentResourceTest extends ApiSupport {
         super.setUp();
         prepare_user_and_product_and_order_for_payment();
     }
+
     @Test
     public void should_create_payment() {
         Map<String, Object> payInfo = new HashMap<>();
@@ -53,8 +55,21 @@ public class UserOrderPaymentResourceTest extends ApiSupport {
                 .request()
                 .post(Entity.json(payInfo));
 
-        assertThat( response.getStatus(), is(201));
+        assertThat(response.getStatus(), is(201));
+    }
 
+    @Test
+    public void should_get_payment_of_some_order_of_some_user() {
+        Payment payment = new Payment(order.getId());
+        payment.setAmount(3.0);
+        payment.setType(0);
+        paymentRepository.save(payment);
+
+        Response response = target("/users/" + user.getId() + "/orders/" + order.getId() + "/payment")
+                .request()
+                .get();
+
+        assertThat(response.getStatus(), is(200));
     }
 
     private void prepare_user_and_product_and_order_for_payment() {
